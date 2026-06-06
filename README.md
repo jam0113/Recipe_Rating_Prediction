@@ -82,48 +82,37 @@ In my exploratory data analysis, I first examined the distributions of important
 
 First, I looked at the distribution of average recipe ratings.
 
-<!-- Replace this with your actual Plotly iframe later -->
-
-<!--
 <iframe
   src="assets/avg_rating_distribution.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
--->
 
-The distribution of `avg_rating` is heavily concentrated near 5 stars. This shows that most recipes in the dataset receive very positive ratings. Because ratings are so skewed toward 5, small differences in average rating may still be meaningful.
+The distribution of `avg_rating` is heavily concentrated near 5 stars. This shows that most recipes in the dataset receive very positive ratings. Because ratings are so skewed toward 5, small differences in average rating may still be meaningful. This is important for my project because I am trying to compare ratings across different types of recipes, even though most ratings are already very high.
 
 Next, I examined the distribution of calories.
 
-<!-- Replace this with your actual Plotly iframe later -->
-
-<!--
 <iframe
   src="assets/calories_distribution.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
--->
 
-The distribution of calories is right-skewed. Most recipes have moderate calorie counts, while a smaller number of recipes have very high calorie values. Because the dataset contains extreme nutrition outliers, I used a filtered version of the data for this visualization so the main distribution would be easier to interpret.
+The distribution of calories is right-skewed. Most recipes have relatively moderate calorie counts, while a smaller number of recipes have very high calorie values. Because the dataset contains extreme nutrition outliers, I used a filtered version of the data for this visualization so the main distribution would be easier to interpret. This plot shows that calories vary substantially across recipes, making calories a useful nutrition feature to consider in later analysis.
 
 I also examined the distribution of protein percentage of daily value.
 
-<!-- Replace this with your actual Plotly iframe later -->
-
-<!--
 <iframe
   src="assets/protein_distribution.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
--->
 
-The distribution of `protein_pdv` is also right-skewed. Most recipes have relatively low to moderate protein values, while fewer recipes have very high protein values. Since protein is one way to describe a recipe’s nutritional profile, this column is important for my analysis.
+The distribution of `protein_pdv` is also right-skewed. Most recipes have relatively low to moderate protein values, while fewer recipes have very high protein values. Since protein is one way to describe a recipe’s nutritional profile, this column is important for my analysis of whether healthier recipes are rated differently from less healthy recipes.
+
 
 ### Bivariate Analysis
 
