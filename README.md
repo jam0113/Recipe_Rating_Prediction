@@ -245,30 +245,34 @@ The model used nine quantitative recipe-level features:
 
 All nine features are quantitative. There are **0 ordinal features** and **0 nominal features** in this baseline model, so no categorical encoding was needed. I standardized the numerical features using `StandardScaler` and trained the logistic regression model using a single `sklearn` pipeline.
 
-To evaluate the model’s ability to generalize to unseen data, I used a train-test split and measured performance using accuracy and F1-score. The baseline model had a training accuracy of **0.5882** and a test accuracy of **0.5863**. It had a training F1-score of **0.7403** and a test F1-score of **0.7387**.
+To evaluate the model’s ability to generalize to unseen data, I used a train-test split and measured performance using accuracy and **macro-averaged F1-score**. The baseline model had a training accuracy of **0.5882** and a test accuracy of **0.5863**. It had a training macro F1-score of **0.3733** and a test macro F1-score of **0.3725**.
 
-The train and test scores are very similar, which suggests that the model is not severely overfitting. However, I would not consider this baseline model very strong. Since about **58.9%** of the recipes in the modeling dataset are highly rated, the model’s accuracy is close to what could be achieved by often predicting the majority class. The F1-score is higher because the positive class, highly rated recipes, is the majority class. Overall, this model is a useful baseline, but it leaves room for improvement through feature engineering and more flexible modeling methods.
+The train and test scores are very similar, which suggests that the model is not severely overfitting. However, I would not consider this baseline model strong. Since about **58.9%** of the recipes in the modeling dataset are highly rated, the model’s accuracy is close to what could be achieved by mostly predicting the majority class. The low macro F1-score shows that the model does not perform well across both classes equally, especially for the non-5-star recipes. Overall, this model is a useful baseline, but it leaves substantial room for improvement through feature engineering and more flexible modeling methods.
 
 ## Final Model
 
-For my final model, I used Ridge regression with both numerical recipe features and text-based features from recipe names and tags. This model improves on the baseline because it includes engineered features and recipe text information that may capture recipe categories not represented by nutrition values alone.
+For my final model, I used a **logistic regression classifier** to predict `high_rating`, which indicates whether a recipe has an average rating of exactly 5.0. This model improves on the baseline model by adding engineered numerical features and text-based features from the recipe `name`, `tags`, and `ingredients` columns. These added features allow the model to use more information about the recipe beyond the raw nutrition and preparation variables.
 
-I added four engineered features:
+I added five engineered numerical features:
 
 * `log_minutes`: the log-transformed preparation time
 * `log_calories`: the log-transformed calorie value
 * `health_score`: protein percentage of daily value minus sugar percentage of daily value
 * `complexity_score`: number of steps plus number of ingredients
+* `n_tags`: the number of tags associated with the recipe
 
-I created `log_minutes` and `log_calories` because both preparation time and calories are right-skewed and contain extreme values. Taking the log reduces the influence of very large values. I created `health_score` because my project focuses on whether healthier recipes are rated differently, and this feature combines two important nutrition variables: protein and sugar. I created `complexity_score` because recipes with more steps and more ingredients may be more complicated to make, which could affect user ratings.
+I created `log_minutes` and `log_calories` because preparation time and calories are right-skewed and contain extreme values. Taking the log reduces the influence of very large values while still preserving differences between recipes. I created `health_score` because my project focuses on the relationship between nutrition and ratings, and this feature summarizes a simple version of healthiness by comparing protein and sugar. I created `complexity_score` because recipes with more steps and more ingredients may be harder or more time-consuming to make, which could affect whether users rate them highly. I also added `n_tags` because recipes with more tags may be easier to find or may be described in more detail.
 
-In addition to these numerical features, I used TF-IDF vectorization on the `name` and `tags` columns. These text features can capture information about recipe categories, such as desserts, salads, soups, quick meals, or healthy recipes. This information may help predict ratings beyond what is available from nutrition columns alone.
+In addition to these numerical features, I used TF-IDF vectorization on the `name`, `tags`, and `ingredients` columns. These text features can capture information about recipe categories and recipe types, such as whether a recipe is a dessert, a quick meal, a healthy dish, or a specific kind of cuisine. This information may be useful because users may rate different kinds of recipes differently, even when their nutrition values are similar.
 
-I used GridSearchCV to tune the Ridge regression regularization parameter `alpha`. The best value was `alpha = 100`.
+I used a single `sklearn` pipeline that combined preprocessing and model training. The numerical features were standardized using `StandardScaler`, while the text columns were transformed using `TfidfVectorizer`. I then used logistic regression as the classifier.
 
-The final model had a training RMSE of 0.6322 and a test RMSE of 0.6291. Compared to the baseline model’s test RMSE of about 0.6360, the final model slightly improved performance on unseen data.
+To select the final model, I used `GridSearchCV` with 5-fold cross-validation. I tuned the logistic regression regularization strength `C` and the `class_weight` parameter. The best hyperparameters were `C = 0.1` and `class_weight = None`. I selected these hyperparameters using macro-averaged F1-score, which matches my evaluation metric.
 
-Although the improvement is small, the final model is more thoughtful than the baseline because it uses engineered features and text-based information from recipe names and tags. The small improvement may be partly due to the fact that average ratings are highly concentrated near 5, making it difficult for any model to predict meaningful differences between recipes.
+The final model had a test accuracy of **0.6063** and a test macro F1-score of **0.5317**. Compared to the baseline model, which had a test accuracy of **0.5863** and a test macro F1-score of **0.3725**, the final model improved the macro F1-score by **0.1592**.
+
+This improvement suggests that the engineered features and text-based features helped the model distinguish between highly rated and not highly rated recipes. The baseline model mostly relied on raw quantitative recipe features, while the final model was able to use additional information about recipe type, ingredients, complexity, and healthiness. Although the model is still not perfect, it performs better across both classes than the baseline model and is a stronger final model for this prediction task.
+
 
 ## Fairness Analysis
 
