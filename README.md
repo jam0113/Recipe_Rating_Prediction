@@ -116,37 +116,29 @@ The distribution of `protein_pdv` is also right-skewed. Most recipes have relati
 
 ### Bivariate Analysis
 
-After looking at individual variables, I examined relationships between nutrition and average rating.
+After looking at individual variables, I examined relationships between nutrition and average rating. Since calorie and protein values are numerical and have wide ranges, I grouped recipes into four quartile-based groups. This makes it easier to compare ratings across recipes with relatively low, medium, and high nutritional values.
 
 First, I grouped recipes into calorie groups and compared their average ratings.
 
-<!-- Replace this with your actual Plotly iframe later -->
-
-<!--
 <iframe
   src="assets/rating_by_calorie_group.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
--->
 
-The calorie group box plot shows that average ratings are generally high across all calorie groups. The median rating is close to 5 for each group, suggesting that calorie level alone does not strongly separate highly rated recipes from lower-rated recipes. However, lower-rated outliers appear in every calorie group.
+The calorie group box plot shows that average ratings are generally high across all calorie groups. The median rating is close to 5 for each group, suggesting that calorie level alone does not strongly separate highly rated recipes from lower-rated recipes. However, lower-rated outliers appear in every calorie group, meaning that recipes with both low and high calorie counts can still receive lower ratings.
 
 Next, I grouped recipes into protein groups and compared their average ratings.
 
-<!-- Replace this with your actual Plotly iframe later -->
-
-<!--
 <iframe
   src="assets/rating_by_protein_group.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
--->
 
-The protein group box plot shows a similar pattern. Ratings are high across all protein groups, but the mean average rating slightly decreases as protein level increases. This pattern is small, but it suggests that protein content may be related to recipe ratings.
+The protein group box plot shows a similar pattern. Ratings are high across all protein groups, but the mean average rating slightly decreases as protein level increases. This pattern is small, but it suggests that protein content may be related to recipe ratings. Because the visual difference is not very large, I also used grouped summary statistics to examine the pattern more clearly.
 
 ### Interesting Aggregates
 
@@ -159,7 +151,19 @@ To summarize the relationship between protein and rating more clearly, I grouped
 | Medium-High Protein |             19811 |              4.6203 |                   5.0 |      416.6272 |        47.0612 |
 | High Protein        |             19667 |              4.6068 |                   5.0 |      619.5255 |        39.1060 |
 
-This table shows that all protein groups have a median average rating of 5.0, which confirms that Food.com ratings are generally very high. However, the mean average rating slightly decreases as protein level increases. Low-protein recipes have the highest mean average rating, while high-protein recipes have the lowest mean average rating. The difference is not large, but the pattern is worth investigating further in the hypothesis test.
+This table shows that all protein groups have a median average rating of 5.0, which confirms that Food.com ratings are generally very high. However, the mean average rating slightly decreases as protein level increases. Low-protein recipes have the highest mean average rating, while high-protein recipes have the lowest mean average rating. The difference is not large, but the pattern suggests that protein content may be related to recipe ratings and is worth investigating further in the hypothesis test.
+
+I also created a pivot table showing the mean average rating for each combination of protein group and calorie group.
+
+| Protein Group       | Low Calories | Medium-Low Calories | Medium-High Calories | High Calories |
+| ------------------- | -----------: | ------------------: | -------------------: | ------------: |
+| Low Protein         |       4.6473 |              4.6617 |               4.6509 |        4.6501 |
+| Medium-Low Protein  |       4.6158 |              4.6190 |               4.6349 |        4.6336 |
+| Medium-High Protein |       4.6023 |              4.5967 |               4.6267 |        4.6401 |
+| High Protein        |       4.6179 |              4.6134 |               4.5940 |        4.6120 |
+
+The pivot table shows that ratings remain high across nearly all combinations of calorie and protein groups. There is no dramatic rating difference across the table, but the values are not exactly the same. This supports the idea that nutrition may have some relationship with ratings, even though the effect appears small because most recipes are rated highly.
+
 
 ## Assessment of Missingness
 
