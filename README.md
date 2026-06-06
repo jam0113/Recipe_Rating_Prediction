@@ -217,33 +217,19 @@ The histogram above shows the empirical distribution of the permutation test sta
 
 ## Framing a Prediction Problem
 
-For my prediction problem, I predict a recipe’s `avg_rating`, which is the average user rating for a recipe after ratings of 0 were replaced with missing values. This is a **regression problem** because `avg_rating` is a numerical variable.
+For my prediction problem, I will predict whether a recipe is **highly rated**. I define a highly rated recipe as one with an `avg_rating` equal to 5.0, and a not highly rated recipe as one with an `avg_rating` below 5.0. This is a **binary classification problem** because the response variable has two possible classes: highly rated or not highly rated.
 
-I chose to predict `avg_rating` because the earlier parts of my project focused on the relationship between recipe nutrition and user ratings. Predicting average rating allows me to investigate whether recipe characteristics such as nutrition, preparation time, and complexity contain useful information about how users rate recipes.
+I chose this prediction problem because the earlier parts of my project focused on the relationship between recipe nutrition and user ratings. The distribution of `avg_rating` is heavily concentrated near 5 stars, so predicting the exact numerical rating may not be very meaningful. Instead, predicting whether a recipe receives a perfect average rating allows me to keep the focus on recipe ratings while creating a clearer classification task.
 
-At the time of prediction, I would know information about the recipe itself, such as its calories, sugar percentage of daily value, protein percentage of daily value, carbohydrates percentage of daily value, total fat percentage of daily value, sodium percentage of daily value, preparation time, number of steps, and number of ingredients. I would not use individual user ratings or review text as features because those are only available after users interact with the recipe.
+The response variable is `high_rating`, which is `True` if a recipe’s `avg_rating` is equal to 5.0 and `False` otherwise.
 
-The response variable is:
+At the time of prediction, I would know recipe-level information such as nutrition values, preparation time, number of steps, and number of ingredients. I would not use individual user ratings or review text as features because those are only available after users interact with the recipe.
 
-* `avg_rating`
-
-The features used in my baseline model are:
-
-* `calories`
-* `sugar_pdv`
-* `protein_pdv`
-* `carbohydrates_pdv`
-* `total_fat_pdv`
-* `sodium_pdv`
-* `minutes`
-* `n_steps`
-* `n_ingredients`
-
-I evaluated my model using **root mean squared error (RMSE)**. RMSE is appropriate because it measures the typical prediction error in rating units and penalizes larger errors more strongly. This is useful for predicting recipe ratings because a prediction that is far from the true average rating should be considered worse than a prediction that is only slightly off.
+I will evaluate my model using **F1-score**. I chose F1-score instead of accuracy because the classes are imbalanced: many recipes have very high ratings, especially ratings close to or equal to 5. Accuracy alone could be misleading if the model mostly predicts the majority class. F1-score is more appropriate because it balances precision and recall when evaluating how well the model identifies highly rated recipes.
 
 ## Baseline Model
 
-For my baseline model, I used a **linear regression model** to predict `avg_rating`. I chose linear regression because it is simple, interpretable, and a reasonable starting point before trying more complex models.
+For my baseline model, I used a **logistic regression classifier** to predict `high_rating`, which indicates whether a recipe has an average rating of exactly 5.0. I chose logistic regression because it is simple, interpretable, and appropriate for a binary classification problem.
 
 The model used nine quantitative recipe-level features:
 
@@ -257,12 +243,12 @@ The model used nine quantitative recipe-level features:
 * `n_steps`
 * `n_ingredients`
 
-All nine features are quantitative. I did not use any ordinal or nominal features in the baseline model, so no categorical encoding was needed. I standardized the numerical features and trained the model using a single `sklearn` pipeline.
+All nine features are quantitative. There are **0 ordinal features** and **0 nominal features** in this baseline model, so no categorical encoding was needed. I standardized the numerical features using `StandardScaler` and trained the logistic regression model using a single `sklearn` pipeline.
 
-To evaluate the model’s ability to generalize to unseen data, I used a train-test split and measured performance using RMSE. The baseline model had a training RMSE of **0.6417** and a test RMSE of **0.6360**. Since `avg_rating` is measured on a 1-to-5 scale, this means the model’s typical prediction error on unseen recipes is about **0.64 rating points**.
+To evaluate the model’s ability to generalize to unseen data, I used a train-test split and measured performance using accuracy and F1-score. The baseline model had a training accuracy of **0.5882** and a test accuracy of **0.5863**. It had a training F1-score of **0.7403** and a test F1-score of **0.7387**.
 
-The training and test RMSE values are very similar, which suggests that the model is not severely overfitting. However, I would not consider this baseline model very strong. It only uses raw quantitative features and assumes a linear relationship between recipe characteristics and average rating. Since recipe ratings are highly concentrated near 5, the model may have difficulty capturing smaller differences between recipes. Overall, this baseline model is a useful starting point, but there is still room to improve it with additional feature engineering and more flexible modeling methods.
-    
+The train and test scores are very similar, which suggests that the model is not severely overfitting. However, I would not consider this baseline model very strong. Since about **58.9%** of the recipes in the modeling dataset are highly rated, the model’s accuracy is close to what could be achieved by often predicting the majority class. The F1-score is higher because the positive class, highly rated recipes, is the majority class. Overall, this model is a useful baseline, but it leaves room for improvement through feature engineering and more flexible modeling methods.
+
 ## Final Model
 
 For my final model, I used Ridge regression with both numerical recipe features and text-based features from recipe names and tags. This model improves on the baseline because it includes engineered features and recipe text information that may capture recipe categories not represented by nutrition values alone.
