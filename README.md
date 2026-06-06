@@ -1,8 +1,6 @@
 # Are Healthier Recipes Rated Differently on Food.com?
 
-Project for DSC 80 at UCSD
-
-By Jay Ma
+Project at UCSD By Jay Ma
 
 ## Introduction
 
