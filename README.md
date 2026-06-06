@@ -217,11 +217,11 @@ The histogram above shows the empirical distribution of the permutation test sta
 
 ## Framing a Prediction Problem
 
-For my prediction problem, I predict a recipe’s `avg_rating`, which is the average user rating for a recipe after ratings of 0 were replaced with missing values. This is a regression problem because `avg_rating` is a numerical variable.
+For my prediction problem, I predict a recipe’s `avg_rating`, which is the average user rating for a recipe after ratings of 0 were replaced with missing values. This is a **regression problem** because `avg_rating` is a numerical variable.
 
 I chose to predict `avg_rating` because the earlier parts of my project focused on the relationship between recipe nutrition and user ratings. Predicting average rating allows me to investigate whether recipe characteristics such as nutrition, preparation time, and complexity contain useful information about how users rate recipes.
 
-At the time of prediction, I would know information about the recipe itself, such as its calories, sugar, protein, carbohydrates, preparation time, number of steps, and number of ingredients. I would not use individual user ratings or review text as features because those are only available after users interact with the recipe.
+At the time of prediction, I would know information about the recipe itself, such as its calories, sugar percentage of daily value, protein percentage of daily value, carbohydrates percentage of daily value, total fat percentage of daily value, sodium percentage of daily value, preparation time, number of steps, and number of ingredients. I would not use individual user ratings or review text as features because those are only available after users interact with the recipe.
 
 The response variable is:
 
@@ -239,13 +239,13 @@ The features used in my baseline model are:
 * `n_steps`
 * `n_ingredients`
 
-I evaluated my model using root mean squared error, or RMSE. RMSE is appropriate because it measures the typical prediction error in rating units and penalizes larger errors more strongly.
+I evaluated my model using **root mean squared error (RMSE)**. RMSE is appropriate because it measures the typical prediction error in rating units and penalizes larger errors more strongly. This is useful for predicting recipe ratings because a prediction that is far from the true average rating should be considered worse than a prediction that is only slightly off.
 
 ## Baseline Model
 
-For my baseline model, I used a linear regression model to predict `avg_rating`.
+For my baseline model, I used a **linear regression model** to predict `avg_rating`. I chose linear regression because it is simple, interpretable, and a reasonable starting point before trying more complex models.
 
-The model used nine quantitative features:
+The model used nine quantitative recipe-level features:
 
 * `calories`
 * `sugar_pdv`
@@ -257,12 +257,12 @@ The model used nine quantitative features:
 * `n_steps`
 * `n_ingredients`
 
-All of these features are quantitative. I did not use any ordinal or nominal features in the baseline model, so no categorical encoding was needed. I standardized the numerical features and trained the model using an `sklearn` pipeline.
+All nine features are quantitative. I did not use any ordinal or nominal features in the baseline model, so no categorical encoding was needed. I standardized the numerical features and trained the model using a single `sklearn` pipeline.
 
-The baseline model had a training RMSE of 0.6417 and a test RMSE of 0.6360. Since `avg_rating` is measured on a 1-to-5 scale, this means the model’s typical prediction error on unseen recipes is about 0.64 rating points.
+To evaluate the model’s ability to generalize to unseen data, I used a train-test split and measured performance using RMSE. The baseline model had a training RMSE of **0.6417** and a test RMSE of **0.6360**. Since `avg_rating` is measured on a 1-to-5 scale, this means the model’s typical prediction error on unseen recipes is about **0.64 rating points**.
 
-The training and test RMSE values are very similar, which suggests that the model is not severely overfitting. However, the model is still limited because it only uses raw quantitative features and assumes a linear relationship between recipe characteristics and average rating. Since recipe ratings are highly concentrated near 5, the model may have difficulty capturing smaller differences between recipes. I consider this baseline model a useful starting point, but not a strong final model.
-
+The training and test RMSE values are very similar, which suggests that the model is not severely overfitting. However, I would not consider this baseline model very strong. It only uses raw quantitative features and assumes a linear relationship between recipe characteristics and average rating. Since recipe ratings are highly concentrated near 5, the model may have difficulty capturing smaller differences between recipes. Overall, this baseline model is a useful starting point, but there is still room to improve it with additional feature engineering and more flexible modeling methods.
+    
 ## Final Model
 
 For my final model, I used Ridge regression with both numerical recipe features and text-based features from recipe names and tags. This model improves on the baseline because it includes engineered features and recipe text information that may capture recipe categories not represented by nutrition values alone.
