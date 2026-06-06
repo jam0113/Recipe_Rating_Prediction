@@ -276,4 +276,35 @@ This improvement suggests that the engineered features and text-based features h
 
 ## Fairness Analysis
 
-This section will analyze whether the final model performs differently across two groups of recipes.
+For my fairness analysis, I examined whether my final model performs equally well for recipes with shorter preparation times and recipes with longer preparation times. Since preparation time is an important recipe characteristic, I wanted to test whether the model’s performance differs between quicker and slower recipes.
+
+I split recipes into two groups using the median value of `minutes` in the held-out test set:
+
+* **Group X:** short-prep recipes, where `minutes` is at or below the median
+* **Group Y:** long-prep recipes, where `minutes` is above the median
+
+I used **accuracy** as the evaluation metric for this fairness analysis. Accuracy measures the proportion of recipes whose `high_rating` label the model predicts correctly. This is appropriate here because I am comparing how often the classifier is correct within each preparation-time group.
+
+My hypotheses were:
+
+* **Null hypothesis:** The model is fair with respect to preparation time. Its accuracy for short-prep recipes and long-prep recipes is roughly the same, and any observed difference is due to random chance.
+* **Alternative hypothesis:** The model is unfair with respect to preparation time. Its accuracy differs between short-prep recipes and long-prep recipes.
+
+My test statistic was the **absolute difference in accuracy** between the two groups:
+
+**|accuracy for short-prep recipes − accuracy for long-prep recipes|**
+
+Using the final fitted model on the held-out test set, the model had an accuracy of **0.5720** for short-prep recipes and **0.5668** for long-prep recipes. The observed absolute difference in accuracy was **0.0052**.
+
+To determine whether this difference was unusually large, I performed a permutation test with 1,000 repetitions. In each repetition, I shuffled the preparation-time group labels while keeping the model’s predictions fixed, then recalculated the absolute difference in accuracy between the two shuffled groups. I used a significance level of **0.05**.
+
+<iframe
+  src="assets/fairness_accuracy_permutation.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+The permutation test produced a p-value of **0.529**. Since this p-value is much greater than 0.05, I fail to reject the null hypothesis. This means I do not find evidence that the model performs differently for short-prep and long-prep recipes. The observed difference in accuracy is very small and is consistent with random chance.
+
+This does not prove that the model is perfectly fair, but based on this fairness analysis, I do not find evidence of unfairness with respect to preparation time.
