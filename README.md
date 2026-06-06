@@ -84,8 +84,8 @@ First, I looked at the distribution of average recipe ratings.
 
 <iframe
   src="assets/avg_rating_distribution.html"
-  width="800"
-  height="600"
+  width="700"
+  height="500"
   frameborder="0"
 ></iframe>
 
@@ -95,8 +95,8 @@ Next, I examined the distribution of calories.
 
 <iframe
   src="assets/calories_distribution.html"
-  width="800"
-  height="600"
+  width="700"
+  height="500"
   frameborder="0"
 ></iframe>
 
@@ -106,8 +106,8 @@ I also examined the distribution of protein percentage of daily value.
 
 <iframe
   src="assets/protein_distribution.html"
-  width="800"
-  height="600"
+  width="700"
+  height="500"
   frameborder="0"
 ></iframe>
 
@@ -122,8 +122,8 @@ First, I grouped recipes into calorie groups and compared their average ratings.
 
 <iframe
   src="assets/rating_by_calorie_group.html"
-  width="800"
-  height="600"
+  width="700"
+  height="500"
   frameborder="0"
 ></iframe>
 
@@ -133,8 +133,8 @@ Next, I grouped recipes into protein groups and compared their average ratings.
 
 <iframe
   src="assets/rating_by_protein_group.html"
-  width="800"
-  height="600"
+  width="700"
+  height="500"
   frameborder="0"
 ></iframe>
 
@@ -177,8 +177,8 @@ Next, I tested whether missingness in `avg_rating` depends on `submitted_year`. 
 
 <iframe
   src="assets/missingness_year_permutation.html"
-  width="800"
-  height="600"
+  width="700"
+  height="500"
   frameborder="0"
 ></iframe>
 
@@ -208,8 +208,8 @@ This suggests that healthier and less healthy recipes have **different average r
 
 <iframe
   src="assets/healthiness_hypothesis_test.html"
-  width="800"
-  height="600"
+  width="700"
+  height="500"
   frameborder="0"
 ></iframe>
 
@@ -300,8 +300,8 @@ To determine whether this difference was unusually large, I performed a permutat
 
 <iframe
   src="assets/fairness_accuracy_permutation.html"
-  width="800"
-  height="600"
+  width="700"
+  height="500"
   frameborder="0"
 ></iframe>
 
