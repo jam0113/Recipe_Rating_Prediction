@@ -169,56 +169,51 @@ The pivot table shows that ratings remain high across nearly all combinations of
 
 I focused my missingness analysis on the `avg_rating` column, which is missing for 2,609 recipes. A recipe has missing `avg_rating` when it has no valid rating after ratings of 0 were replaced with `NaN`.
 
-I do not believe that the missingness of `avg_rating` is clearly NMAR based only on the available data. A recipe may be missing ratings because of observable factors such as the year it was submitted, its nutritional content, or how complex the recipe is. However, missingness could also depend on unobserved factors, such as how many users viewed the recipe page but chose not to rate it. If I had additional data such as page views, clicks, saves, or impressions, I could better explain why some recipes are missing ratings.
+I do not believe that the missingness of `avg_rating` is clearly NMAR based only on the available data. A recipe may be missing ratings because of observable factors such as the year it was submitted, its nutritional content, or how complex the recipe is. However, missingness could also depend on unobserved factors, such as how many users viewed the recipe page but chose not to rate it. If I had additional data such as page views, clicks, saves, or impressions, I could better explain why some recipes are missing ratings and potentially make the missingness MAR instead of NMAR.
 
-To test whether missingness in `avg_rating` depends on other columns, I performed permutation tests.
-
-First, I tested whether missingness in `avg_rating` depends on `protein_pdv`. The test statistic was the absolute difference in mean protein percentage of daily value between recipes with missing and non-missing average ratings. The observed statistic was 1.2873, and the p-value was 0.199. Since this p-value is greater than 0.05, I fail to reject the null hypothesis. This suggests that missingness in `avg_rating` does not appear to depend on protein content.
+To test whether missingness in `avg_rating` depends on other columns, I performed permutation tests. First, I tested whether missingness in `avg_rating` depends on `protein_pdv`. The test statistic was the absolute difference in mean protein percentage of daily value between recipes with missing and non-missing average ratings. The observed statistic was 1.2873, and the p-value was about 0.173 in 1,000 simulations. Since this p-value is greater than 0.05, I fail to reject the null hypothesis. This suggests that missingness in `avg_rating` does not appear to depend on protein content.
 
 Next, I tested whether missingness in `avg_rating` depends on `submitted_year`. The test statistic was the absolute difference in mean submitted year between recipes with missing and non-missing average ratings. The observed statistic was 0.7297, and the p-value was 0.0 in 1,000 simulations. Since this p-value is less than 0.05, I reject the null hypothesis. This suggests that missingness in `avg_rating` does appear to depend on the year the recipe was submitted.
 
-This makes sense because recipes submitted in different years may have had different amounts of time to receive ratings. Older recipes may have had more time to accumulate ratings, while newer recipes may be more likely to have missing average ratings.
-
-<!-- Replace this with your actual Plotly iframe later -->
-
-<!--
 <iframe
   src="assets/missingness_year_permutation.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
--->
+
+The permutation distribution for `submitted_year` shows that the observed difference is far from what would typically occur by random chance if missingness were unrelated to submission year. This makes sense because recipes submitted in different years may have had different amounts of time to receive ratings. Older recipes may have had more time to accumulate ratings, while newer recipes may be more likely to have missing average ratings.
+
 
 ## Hypothesis Testing
 
 For my hypothesis test, I investigated whether healthier recipes are rated differently from less healthy recipes.
 
-I defined healthier recipes as recipes with above-median protein and below-median sugar. I defined less healthy recipes as recipes with below-median protein and above-median sugar.
+I defined **healthier recipes** as recipes with **above-median protein** and **below-median sugar**. I defined **less healthy recipes** as recipes with **below-median protein** and **above-median sugar**.
 
 My hypotheses were:
 
-* **Null hypothesis:** Healthier recipes and less healthy recipes have the same average rating.
-* **Alternative hypothesis:** Healthier recipes and less healthy recipes have different average ratings.
+- **Null hypothesis:** Healthier recipes and less healthy recipes have the same average rating.
+- **Alternative hypothesis:** Healthier recipes and less healthy recipes have different average ratings.
 
 My test statistic was the difference in mean average rating between the two groups:
 
 **mean average rating of healthier recipes − mean average rating of less healthy recipes**
 
-The observed difference was -0.026955, meaning healthier recipes had a slightly lower mean average rating than less healthy recipes. I then performed a permutation test using 1,000 simulations. The p-value was 0.0, so I rejected the null hypothesis at the 0.05 significance level.
+The observed difference was **-0.026955**, meaning that healthier recipes had a slightly lower mean average rating than less healthy recipes in the observed data.
 
-This suggests that healthier and less healthy recipes have different average ratings in this dataset. However, the size of the difference is small, so the practical difference between the two groups may not be very large. This result does not prove that healthiness causes different ratings; it only suggests that the observed difference is unlikely under the null hypothesis.
+I then performed a **permutation test** using **1,000 simulations**. The resulting **p-value was 0.0** (in other words, none of the 1,000 simulated differences were as extreme as the observed difference). Because this p-value is less than **0.05**, I rejected the null hypothesis.
 
-<!-- Replace this with your actual Plotly iframe later -->
+This suggests that healthier and less healthy recipes have **different average ratings** in this dataset. However, the size of the observed difference is quite small, so the practical difference between the two groups may not be very large. In addition, this result does **not** prove that healthiness causes different ratings; it only shows that the observed difference would be unlikely if the two groups truly had the same average rating.
 
-<!--
 <iframe
   src="assets/healthiness_hypothesis_test.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
--->
+
+The histogram above shows the empirical distribution of the permutation test statistic under the null hypothesis. The red vertical line marks the observed difference in mean average rating. Because the observed statistic falls in the extreme tail of the distribution, it provides evidence against the null hypothesis and supports the conclusion that the two groups are rated differently.
 
 ## Framing a Prediction Problem
 
